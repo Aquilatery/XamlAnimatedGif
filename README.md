@@ -3,7 +3,7 @@
 [![NuGet version](https://img.shields.io/nuget/vpre/XamlAnimatedGif.svg?logo=nuget)](https://www.nuget.org/packages/XamlAnimatedGif/absoluteLatest)
 [![AppVeyor build](https://img.shields.io/appveyor/ci/thomaslevesque/xamlanimatedgif.svg?logo=appveyor&logoColor=cccccc)](https://ci.appveyor.com/project/thomaslevesque/xamlanimatedgif)
 
-A library to display animated GIF images in WPF applications on .NET Framework 4.5, .NET Core 3.1 and .NET 5.0.
+A library to display animated GIF images in WPF applications on .NET Framework 4.8, .NET 6.0, .NET 7.0, .NET 8.0 and .NET 9.0.
 
 **Basic usage:**
 
@@ -13,7 +13,7 @@ A library to display animated GIF images in WPF applications on .NET Framework 4
 
 For more details, see the [documentation page](https://github.com/XamlAnimatedGif/XamlAnimatedGif/wiki/Documentation) in the wiki.
 
-## About Silverlight 5, Windows 8.1, Windows Phone 8.1, UWP .NET 4.0 support
+## About Silverlight 5, Windows 8.1, Windows Phone 8.1, UWP .NET 4.8 support
 
 This project used to support many XAML platforms; that was actually one of its design goals.
 However, most of the supported frameworks are now obsolete or out of support, and maintaining them was becoming painful. In version 2.0.0, I added support for .NET Core 3.1 and .NET 5.0, and dropped support for older platforms:
@@ -72,7 +72,7 @@ For reference, I'll include the relevant sections of the previous README here (p
 
 ## How to build
 
-You will need Visual Studio 2019 v16.8 or higher and the .NET 5.0 SDK.
+You will need Visual Studio 2019 v16.8 or higher and the .NET 6.0 SDK.
 
 To build from the command line, run `build.cmd`.
 
