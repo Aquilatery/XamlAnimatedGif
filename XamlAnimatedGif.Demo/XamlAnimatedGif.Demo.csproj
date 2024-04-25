@@ -8,14 +8,6 @@
 		<AssemblyOriginatorKeyFile>../XamlAnimatedGif/XamlAnimatedGif.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-		<Reference Include="WindowsBase" />
-		<Reference Include="System.Xaml" />
-		<Reference Include="System.Net.Http" />
-		<Reference Include="PresentationCore" />
-		<Reference Include="PresentationFramework" />
-	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="../XamlAnimatedGif/XamlAnimatedGif.csproj" />
 	</ItemGroup>
