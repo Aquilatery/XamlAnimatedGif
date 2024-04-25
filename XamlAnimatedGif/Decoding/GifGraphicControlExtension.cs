@@ -22,14 +22,11 @@ namespace XamlAnimatedGif.Decoding
 
         }
 
-        internal override GifBlockKind Kind
-        {
-            get { return GifBlockKind.Control; }
-        }
+        internal override GifBlockKind Kind => GifBlockKind.Control;
 
         internal static async Task<GifGraphicControlExtension> ReadAsync(Stream stream)
         {
-            GifGraphicControlExtension ext = new GifGraphicControlExtension();
+            GifGraphicControlExtension ext = new();
             await ext.ReadInternalAsync(stream).ConfigureAwait(false);
             return ext;
         }
@@ -42,7 +39,10 @@ namespace XamlAnimatedGif.Decoding
             await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
             BlockSize = bytes[0]; // should always be 4
             if (BlockSize != 4)
+            {
                 throw GifHelpers.InvalidBlockSizeException("Graphic Control Extension", 4, BlockSize);
+            }
+
             byte packedFields = bytes[1];
             DisposalMethod = (GifFrameDisposalMethod)((packedFields & 0x1C) >> 2);
             UserInput = (packedFields & 0x02) != 0;

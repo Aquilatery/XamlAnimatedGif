@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Runtime.InteropServices;
 using XamlAnimatedGif.Decoding;
 using XamlAnimatedGif.Decompression;
 using XamlAnimatedGif.Extensions;
@@ -30,6 +30,7 @@ namespace XamlAnimatedGif
         private readonly bool _cacheFrameDataInMemory;
         private readonly byte[][] _cachedFrameBytes;
         private readonly Task _loadFramesDataTask;
+
         #region Constructor and factory methods
 
         internal Animator(Stream sourceStream, Uri sourceUri, GifDataStream metadata, RepeatBehavior repeatBehavior,
@@ -76,7 +77,7 @@ namespace XamlAnimatedGif
                 GifImageDescriptor frameDesc = _metadata.Frames[frameIndex].Descriptor;
                 await GetIndexBytesAsync(frameIndex, indexCompressedBytes);
                 using LzwDecompressStream indexDecompressedStream =
-                    new LzwDecompressStream(indexCompressedBytes, frame.ImageData.LzwMinimumCodeSize);
+                    new(indexCompressedBytes, frame.ImageData.LzwMinimumCodeSize);
                 _cachedFrameBytes[frameIndex] = new byte[frameDesc.Width * frameDesc.Height];
 
                 await indexDecompressedStream.ReadAllAsync(_cachedFrameBytes[frameIndex], 0, frameDesc.Width * frameDesc.Height);
@@ -108,7 +109,10 @@ namespace XamlAnimatedGif
             where TAnimator : Animator
         {
             if (!sourceStream.CanSeek)
+            {
                 throw new ArgumentException("The stream is not seekable");
+            }
+
             sourceStream.Seek(0, SeekOrigin.Begin);
             GifDataStream metadata = await GifDataStream.ReadAsync(sourceStream);
             return create(metadata);
@@ -140,7 +144,10 @@ namespace XamlAnimatedGif
                     _isStarted = true;
                     OnAnimationStarted();
                     if (_timingManager.IsPaused)
+                    {
                         _timingManager.Resume();
+                    }
+
                     await RunAsync(_cancellationTokenSource.Token);
                 }
                 else if (_timingManager.IsPaused)
@@ -155,7 +162,9 @@ namespace XamlAnimatedGif
             {
                 // ignore errors that might occur during Dispose
                 if (!_disposing)
+                {
                     OnError(ex, AnimationErrorKind.Rendering);
+                }
             }
         }
 
@@ -163,7 +172,10 @@ namespace XamlAnimatedGif
         private async Task RunAsync(CancellationToken cancellationToken)
         {
             if (_loadFramesDataTask != null)
+            {
                 await _loadFramesDataTask;
+            }
+
             while (true)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -171,7 +183,10 @@ namespace XamlAnimatedGif
                 Task rendering = RenderFrameAsync(CurrentFrameIndex, cancellationToken);
                 await Task.WhenAll(timing, rendering);
                 if (!timing.Result)
+                {
                     break;
+                }
+
                 CurrentFrameIndex = (CurrentFrameIndex + 1) % FrameCount;
             }
         }
@@ -188,7 +203,10 @@ namespace XamlAnimatedGif
             get
             {
                 if (_isStarted)
+                {
                     return _timingManager.IsComplete;
+                }
+
                 return false;
             }
         }
@@ -235,7 +253,7 @@ namespace XamlAnimatedGif
         {
             RepeatBehavior actualRepeatBehavior = GetActualRepeatBehavior(metadata, repeatBehavior);
 
-            TimingManager manager = new TimingManager(actualRepeatBehavior);
+            TimingManager manager = new(actualRepeatBehavior);
             foreach (GifFrame frame in metadata.Frames)
             {
                 manager.Add(GetFrameDelay(frame));
@@ -266,13 +284,13 @@ namespace XamlAnimatedGif
         private static WriteableBitmap CreateBitmap(GifDataStream metadata)
         {
             GifLogicalScreenDescriptor desc = metadata.Header.LogicalScreenDescriptor;
-            WriteableBitmap bitmap = new WriteableBitmap(desc.Width, desc.Height, 96, 96, PixelFormats.Bgra32, null);
+            WriteableBitmap bitmap = new(desc.Width, desc.Height, 96, 96, PixelFormats.Bgra32, null);
             return bitmap;
         }
 
         private static Dictionary<int, GifPalette> CreatePalettes(GifDataStream metadata)
         {
-            Dictionary<int, GifPalette> palettes = new Dictionary<int, GifPalette>();
+            Dictionary<int, GifPalette> palettes = new();
             Color[] globalColorTable = null;
             if (metadata.Header.LogicalScreenDescriptor.HasGlobalColorTable)
             {
@@ -330,7 +348,9 @@ namespace XamlAnimatedGif
         private async Task RenderFrameAsync(int frameIndex, CancellationToken cancellationToken)
         {
             if (frameIndex < 0)
+            {
                 return;
+            }
 
             GifFrame frame = _metadata.Frames[frameIndex];
             GifImageDescriptor desc = frame.Descriptor;
@@ -345,9 +365,13 @@ namespace XamlAnimatedGif
             using (_bitmap.LockInScope())
             {
                 if (frameIndex < _previousFrameIndex)
+                {
                     ClearArea(_metadata.Header.LogicalScreenDescriptor);
+                }
                 else
+                {
                     DisposePreviousFrame(frame);
+                }
 
                 int bufferLength = 4 * rect.Width;
                 byte[] indexBuffer;
@@ -469,7 +493,7 @@ namespace XamlAnimatedGif
                         {
                             CopyToBitmap(_previousBackBuffer, _bitmap, 0, _previousBackBuffer.Length);
                             GifLogicalScreenDescriptor desc = _metadata.Header.LogicalScreenDescriptor;
-                            Int32Rect rect = new Int32Rect(0, 0, desc.Width, desc.Height);
+                            Int32Rect rect = new(0, 0, desc.Width, desc.Height);
                             _bitmap.AddDirtyRect(rect);
                             break;
                         }
@@ -506,11 +530,11 @@ namespace XamlAnimatedGif
             GifImageData data = frame.ImageData;
             cancellationToken.ThrowIfCancellationRequested();
             _sourceStream.Seek(data.CompressedDataStartOffset, SeekOrigin.Begin);
-            using (MemoryStream ms = new MemoryStream(_indexStreamBuffer))
+            using (MemoryStream ms = new(_indexStreamBuffer))
             {
                 await GifHelpers.CopyDataBlocksToStreamAsync(_sourceStream, ms, cancellationToken).ConfigureAwait(false);
             }
-            LzwDecompressStream lzwStream = new LzwDecompressStream(_indexStreamBuffer, data.LzwMinimumCodeSize);
+            LzwDecompressStream lzwStream = new(_indexStreamBuffer, data.LzwMinimumCodeSize);
             return lzwStream;
         }
 
@@ -519,7 +543,7 @@ namespace XamlAnimatedGif
             long startPosition = _metadata.Frames[frameIndex].ImageData.CompressedDataStartOffset;
 
             _sourceStream.Seek(startPosition, SeekOrigin.Begin);
-            using MemoryStream memoryStream = new MemoryStream(buffer);
+            using MemoryStream memoryStream = new(buffer);
             await GifHelpers.CopyDataBlocksToStreamAsync(_sourceStream, memoryStream).ConfigureAwait(false);
         }
 
@@ -535,7 +559,9 @@ namespace XamlAnimatedGif
             if (gce != null)
             {
                 if (gce.Delay != 0)
+                {
                     return TimeSpan.FromMilliseconds(gce.Delay);
+                }
             }
             return TimeSpan.FromMilliseconds(100);
         }
@@ -543,7 +569,10 @@ namespace XamlAnimatedGif
         private static RepeatBehavior GetRepeatBehaviorFromGif(GifDataStream metadata)
         {
             if (metadata.RepeatCount == 0)
+            {
                 return RepeatBehavior.Forever;
+            }
+
             return new RepeatBehavior(metadata.RepeatCount);
         }
 
@@ -576,7 +605,11 @@ namespace XamlAnimatedGif
             if (!_disposed)
             {
                 _disposing = true;
-                if (_timingManager != null) _timingManager.Completed -= TimingManagerCompleted;
+                if (_timingManager != null)
+                {
+                    _timingManager.Completed -= TimingManagerCompleted;
+                }
+
                 _cancellationTokenSource?.Cancel();
                 if (_isSourceStreamOwner)
                 {
@@ -621,7 +654,10 @@ namespace XamlAnimatedGif
             try
             {
                 if (_loadFramesDataTask != null)
+                {
                     await _loadFramesDataTask;
+                }
+
                 await RenderFrameAsync(0, CancellationToken.None);
                 CurrentFrameIndex = 0;
                 _timingManager.Pause();
@@ -657,12 +693,16 @@ namespace XamlAnimatedGif
         internal void OnRepeatBehaviorChanged()
         {
             if (_timingManager == null)
+            {
                 return;
+            }
 
             RepeatBehavior newValue = GetSpecifiedRepeatBehavior();
             RepeatBehavior newActualValue = GetActualRepeatBehavior(_metadata, newValue);
             if (_timingManager.RepeatBehavior == newActualValue)
+            {
                 return;
+            }
 
             _timingManager.RepeatBehavior = newActualValue;
             Rewind();

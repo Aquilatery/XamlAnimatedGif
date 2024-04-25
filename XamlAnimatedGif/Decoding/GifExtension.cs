@@ -14,7 +14,10 @@ namespace XamlAnimatedGif.Decoding
 
             int label = stream.ReadByte();
             if (label < 0)
+            {
                 throw new EndOfStreamException();
+            }
+
             return label switch
             {
                 GifGraphicControlExtension.ExtensionLabel => await GifGraphicControlExtension.ReadAsync(stream).ConfigureAwait(false),

@@ -23,7 +23,7 @@ namespace XamlAnimatedGif.Decoding
 
         public static async Task<byte[]> ReadDataBlocksAsync(Stream stream, CancellationToken cancellationToken = default)
         {
-            using MemoryStream ms = new MemoryStream();
+            using MemoryStream ms = new();
             await CopyDataBlocksToStreamAsync(stream, ms, cancellationToken);
             return ms.ToArray();
         }

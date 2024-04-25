@@ -29,14 +29,11 @@ namespace XamlAnimatedGif.Decoding
         {
         }
 
-        internal override GifBlockKind Kind
-        {
-            get { return GifBlockKind.GraphicRendering; }
-        }
+        internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
         internal new static async Task<GifPlainTextExtension> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
         {
-            GifPlainTextExtension plainText = new GifPlainTextExtension();
+            GifPlainTextExtension plainText = new();
             await plainText.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);
             return plainText;
         }
@@ -50,7 +47,9 @@ namespace XamlAnimatedGif.Decoding
 
             BlockSize = bytes[0];
             if (BlockSize != 12)
+            {
                 throw GifHelpers.InvalidBlockSizeException("Plain Text Extension", 12, BlockSize);
+            }
 
             Left = BitConverter.ToUInt16(bytes, 1);
             Top = BitConverter.ToUInt16(bytes, 3);

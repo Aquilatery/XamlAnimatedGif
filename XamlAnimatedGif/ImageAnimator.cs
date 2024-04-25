@@ -22,7 +22,10 @@ namespace XamlAnimatedGif
             OnRepeatBehaviorChanged(); // in case the value has changed during creation
         }
 
-        protected override RepeatBehavior GetSpecifiedRepeatBehavior() => AnimationBehavior.GetRepeatBehavior(_image);
+        protected override RepeatBehavior GetSpecifiedRepeatBehavior()
+        {
+            return AnimationBehavior.GetRepeatBehavior(_image);
+        }
 
         protected override object AnimationSource => _image;
 

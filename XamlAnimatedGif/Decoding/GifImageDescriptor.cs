@@ -22,7 +22,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifImageDescriptor> ReadAsync(Stream stream)
         {
-            GifImageDescriptor descriptor = new GifImageDescriptor();
+            GifImageDescriptor descriptor = new();
             await descriptor.ReadInternalAsync(stream).ConfigureAwait(false);
             return descriptor;
         }

@@ -19,14 +19,11 @@ namespace XamlAnimatedGif.Decoding
         {
         }
 
-        internal override GifBlockKind Kind
-        {
-            get { return GifBlockKind.SpecialPurpose; }
-        }
+        internal override GifBlockKind Kind => GifBlockKind.SpecialPurpose;
 
         internal static async Task<GifApplicationExtension> ReadAsync(Stream stream)
         {
-            GifApplicationExtension ext = new GifApplicationExtension();
+            GifApplicationExtension ext = new();
             await ext.ReadInternalAsync(stream).ConfigureAwait(false);
             return ext;
         }
@@ -39,7 +36,9 @@ namespace XamlAnimatedGif.Decoding
             await stream.ReadAllAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
             BlockSize = bytes[0]; // should always be 11
             if (BlockSize != 11)
+            {
                 throw GifHelpers.InvalidBlockSizeException("Application Extension", 11, BlockSize);
+            }
 
             ApplicationIdentifier = GifHelpers.GetString(bytes, 1, 8);
             byte[] authCode = new byte[3];

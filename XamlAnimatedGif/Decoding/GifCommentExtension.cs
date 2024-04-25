@@ -13,14 +13,11 @@ namespace XamlAnimatedGif.Decoding
         {
         }
 
-        internal override GifBlockKind Kind
-        {
-            get { return GifBlockKind.SpecialPurpose; }
-        }
+        internal override GifBlockKind Kind => GifBlockKind.SpecialPurpose;
 
         internal static async Task<GifCommentExtension> ReadAsync(Stream stream)
         {
-            GifCommentExtension comment = new GifCommentExtension();
+            GifCommentExtension comment = new();
             await comment.ReadInternalAsync(stream).ConfigureAwait(false);
             return comment;
         }
@@ -31,7 +28,9 @@ namespace XamlAnimatedGif.Decoding
 
             byte[] bytes = await GifHelpers.ReadDataBlocksAsync(stream).ConfigureAwait(false);
             if (bytes != null)
+            {
                 Text = GifHelpers.GetString(bytes);
+            }
         }
     }
 }

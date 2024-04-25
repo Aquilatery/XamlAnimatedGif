@@ -1,12 +1,15 @@
-﻿<Window x:Class="XamlAnimatedGif.Demo.DesignTestWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:gif="clr-namespace:XamlAnimatedGif;assembly=XamlAnimatedGif"
-        Title="DesignTestWindow" Height="480" Width="680">
+﻿<Window
+    x:Class="XamlAnimatedGif.Demo.DesignTestWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:gif="clr-namespace:XamlAnimatedGif;assembly=XamlAnimatedGif"
+    Title="DesignTestWindow"
+    Width="680"
+    Height="480">
     <Grid>
-        <Image Stretch="None"
-               gif:AnimationBehavior.SourceUri="Images/bomb.gif"
-               gif:AnimationBehavior.AnimateInDesignMode="False">
-        </Image>
+        <Image
+            gif:AnimationBehavior.AnimateInDesignMode="False"
+            gif:AnimationBehavior.SourceUri="Images/bomb.gif"
+            Stretch="None" />
     </Grid>
 </Window>

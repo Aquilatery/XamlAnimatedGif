@@ -19,14 +19,11 @@ namespace XamlAnimatedGif.Decoding
         {
         }
 
-        internal override GifBlockKind Kind
-        {
-            get { return GifBlockKind.GraphicRendering; }
-        }
+        internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
         internal new static async Task<GifFrame> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
         {
-            GifFrame frame = new GifFrame();
+            GifFrame frame = new();
 
             await frame.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);
 

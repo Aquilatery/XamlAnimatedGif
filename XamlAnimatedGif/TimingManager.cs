@@ -8,7 +8,7 @@ namespace XamlAnimatedGif
 {
     class TimingManager
     {
-        private readonly List<TimeSpan> _timeSpans = new List<TimeSpan>();
+        private readonly List<TimeSpan> _timeSpans = new();
         private int _current;
         private int _count;
         private bool _isComplete;
@@ -29,7 +29,9 @@ namespace XamlAnimatedGif
         public async Task<bool> NextAsync(CancellationToken cancellationToken)
         {
             if (IsComplete)
+            {
                 return false;
+            }
 
             await IsPausedAsync(cancellationToken);
 
@@ -88,12 +90,14 @@ namespace XamlAnimatedGif
 
         public bool IsComplete
         {
-            get { return _isComplete; }
+            get => _isComplete;
             private set
             {
                 _isComplete = value;
                 if (value)
+                {
                     OnCompleted();
+                }
             }
         }
 
@@ -101,14 +105,22 @@ namespace XamlAnimatedGif
         private TaskCompletionSource<int> _pauseCompletionSource;
         public void Pause()
         {
-            if (IsPaused) return; // Make this a no-op.
+            if (IsPaused)
+            {
+                return; // Make this a no-op.
+            }
+
             IsPaused = true;
             _pauseCompletionSource = new TaskCompletionSource<int>();
         }
 
         public void Resume()
         {
-            if (!IsPaused) return; // Make this a no-op.
+            if (!IsPaused)
+            {
+                return; // Make this a no-op.
+            }
+
             TaskCompletionSource<int> tcs = _pauseCompletionSource;
             tcs?.TrySetResult(0);
             _pauseCompletionSource = null;

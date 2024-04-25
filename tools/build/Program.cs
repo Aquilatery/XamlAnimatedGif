@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using McMaster.Extensions.CommandLineUtils;
+using System.IO;
 using System.Runtime.CompilerServices;
-using McMaster.Extensions.CommandLineUtils;
 using static Bullseye.Targets;
 using static SimpleExec.Command;
 
@@ -10,8 +10,10 @@ namespace build
     [SuppressDefaultHelpOption]
     class Program
     {
-        static void Main(string[] args) =>
+        static void Main(string[] args)
+        {
             CommandLineApplication.Execute<Program>(args);
+        }
 
         [Option("-h|-?|--help", "Show help message", CommandOptionType.NoValue)]
         public bool ShowHelp { get; } = false;
@@ -70,10 +72,14 @@ namespace build
             RunTargetsAndExit(RemainingArguments);
         }
 
-        private static string GetSolutionDirectory() =>
-            Path.GetFullPath(Path.Combine(GetScriptDirectory(), @"..\.."));
+        private static string GetSolutionDirectory()
+        {
+            return Path.GetFullPath(Path.Combine(GetScriptDirectory(), @"..\.."));
+        }
 
-        private static string GetScriptDirectory([CallerFilePath] string filename = null) => Path.GetDirectoryName(filename);
-
+        private static string GetScriptDirectory([CallerFilePath] string filename = null)
+        {
+            return Path.GetDirectoryName(filename);
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifLogicalScreenDescriptor> ReadAsync(Stream stream)
         {
-            GifLogicalScreenDescriptor descriptor = new GifLogicalScreenDescriptor();
+            GifLogicalScreenDescriptor descriptor = new();
             await descriptor.ReadInternalAsync(stream).ConfigureAwait(false);
             return descriptor;
         }
@@ -42,14 +42,8 @@ namespace XamlAnimatedGif.Decoding
                     : (15 + bytes[6]) / 64.0;
         }
 
-        int IGifRect.Left
-        {
-            get { return 0; }
-        }
+        int IGifRect.Left => 0;
 
-        int IGifRect.Top
-        {
-            get { return 0; }
-        }
+        int IGifRect.Top => 0;
     }
 }

@@ -19,7 +19,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifDataStream> ReadAsync(Stream stream)
         {
-            GifDataStream file = new GifDataStream();
+            GifDataStream file = new();
             await file.ReadInternalAsync(stream).ConfigureAwait(false);
             return file;
         }
@@ -46,9 +46,9 @@ namespace XamlAnimatedGif.Decoding
 
         private async Task ReadFramesAsync(Stream stream)
         {
-            List<GifFrame> frames = new List<GifFrame>();
-            List<GifExtension> controlExtensions = new List<GifExtension>();
-            List<GifExtension> specialExtensions = new List<GifExtension>();
+            List<GifFrame> frames = new();
+            List<GifExtension> controlExtensions = new();
+            List<GifExtension> specialExtensions = new();
             while (true)
             {
                 try
@@ -56,7 +56,9 @@ namespace XamlAnimatedGif.Decoding
                     GifBlock block = await GifBlock.ReadAsync(stream, controlExtensions).ConfigureAwait(false);
 
                     if (block.Kind == GifBlockKind.GraphicRendering)
+                    {
                         controlExtensions = new List<GifExtension>();
+                    }
 
                     if (block is GifFrame frame)
                     {

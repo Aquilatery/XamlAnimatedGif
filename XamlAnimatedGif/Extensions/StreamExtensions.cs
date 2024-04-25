@@ -18,7 +18,10 @@ namespace XamlAnimatedGif.Extensions
                 int n = await stream.ReadAsync(buffer.AsMemory(offset + totalRead, count - totalRead), cancellationToken);
 #endif
                 if (n == 0)
+                {
                     throw new EndOfStreamException();
+                }
+
                 totalRead += n;
             }
         }
@@ -30,7 +33,10 @@ namespace XamlAnimatedGif.Extensions
             {
                 int n = stream.Read(buffer, offset + totalRead, count - totalRead);
                 if (n == 0)
+                {
                     throw new EndOfStreamException();
+                }
+
                 totalRead += n;
             }
         }
@@ -44,14 +50,20 @@ namespace XamlAnimatedGif.Extensions
             int n = await stream.ReadAsync(buffer.AsMemory(0, 1), cancellationToken);
 #endif
             if (n == 0)
+            {
                 return -1;
+            }
+
             return buffer[0];
         }
 
         public static Stream AsBuffered(this Stream stream)
         {
             if (stream is BufferedStream bs)
+            {
                 return bs;
+            }
+
             return new BufferedStream(stream);
         }
 

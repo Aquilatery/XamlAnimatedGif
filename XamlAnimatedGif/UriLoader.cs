@@ -19,7 +19,10 @@ namespace XamlAnimatedGif
         public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int> progress)
         {
             if (uri.IsAbsoluteUri && (uri.Scheme == "http" || uri.Scheme == "https"))
+            {
                 return GetNetworkStreamAsync(uri, progress);
+            }
+
             return GetStreamFromUriCoreAsync(uri);
         }
 
@@ -39,8 +42,8 @@ namespace XamlAnimatedGif
         {
             try
             {
-                using HttpClient client = new HttpClient();
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+                using HttpClient client = new();
+                HttpRequestMessage request = new(HttpMethod.Get, uri);
                 HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 long length = response.Content.Headers.ContentLength ?? 0;
@@ -53,9 +56,13 @@ namespace XamlAnimatedGif
                         new Progress<long>(bytesCopied =>
                         {
                             if (length > 0)
+                            {
                                 progress.Report((int)(100 * bytesCopied / length));
+                            }
                             else
+                            {
                                 progress.Report(-1);
+                            }
                         });
                 }
                 await responseStream.CopyToAsync(fileStream, absoluteProgress);
@@ -76,7 +83,9 @@ namespace XamlAnimatedGif
                     : Application.GetResourceStream(uri);
 
                 if (sri != null)
+                {
                     return Task.FromResult(sri.Stream);
+                }
 
                 throw new FileNotFoundException("Cannot find file with the specified URI");
             }
@@ -92,7 +101,10 @@ namespace XamlAnimatedGif
         private static Task<Stream> OpenTempFileStreamAsync(string fileName)
         {
             if (!Directory.Exists(DownloadCacheLocation))
+            {
                 Directory.CreateDirectory(DownloadCacheLocation);
+            }
+
             string path = Path.Combine(DownloadCacheLocation, fileName);
             Stream stream = null;
             DateTime time;
@@ -124,7 +136,9 @@ namespace XamlAnimatedGif
         {
             string path = Path.Combine(DownloadCacheLocation, fileName);
             if (File.Exists(path))
+            {
                 File.Delete(path);
+            }
         }
 
         private static string GetCacheFileName(Uri uri)

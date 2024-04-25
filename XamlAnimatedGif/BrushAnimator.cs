@@ -15,7 +15,10 @@ namespace XamlAnimatedGif
             RepeatBehavior = _repeatBehavior;
         }
 
-        protected override RepeatBehavior GetSpecifiedRepeatBehavior() => RepeatBehavior;
+        protected override RepeatBehavior GetSpecifiedRepeatBehavior()
+        {
+            return RepeatBehavior;
+        }
 
         protected override object AnimationSource => Brush;
 
@@ -24,7 +27,7 @@ namespace XamlAnimatedGif
         private RepeatBehavior _repeatBehavior;
         public RepeatBehavior RepeatBehavior
         {
-            get { return _repeatBehavior; }
+            get => _repeatBehavior;
             set
             {
                 _repeatBehavior = value;

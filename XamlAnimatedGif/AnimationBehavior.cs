@@ -1,14 +1,14 @@
-﻿using XamlAnimatedGif.Decoding;
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
-using XamlAnimatedGif.Extensions;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using XamlAnimatedGif.Decoding;
+using XamlAnimatedGif.Extensions;
 
 namespace XamlAnimatedGif
 {
@@ -168,6 +168,7 @@ namespace XamlAnimatedGif
         {
             string cacheLocation = UriLoader.DownloadCacheLocation;
             if (Directory.Exists(cacheLocation))
+            {
                 foreach (string cacheFile in Directory.GetFiles(cacheLocation))
                 {
                     try
@@ -176,6 +177,7 @@ namespace XamlAnimatedGif
                     }
                     catch { }
                 }
+            }
         }
 
         public static void SetDownloadCacheLocation(string value)
@@ -378,7 +380,9 @@ namespace XamlAnimatedGif
         private static void SourceChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             if (o is not Image image)
+            {
                 return;
+            }
 
             InitAnimation(image);
         }
@@ -391,7 +395,9 @@ namespace XamlAnimatedGif
         private static void AnimateInDesignModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is not Image image)
+            {
                 return;
+            }
 
             InitAnimation(image);
         }
@@ -408,7 +414,7 @@ namespace XamlAnimatedGif
                     }
                     else if (sourceUri != null)
                     {
-                        BitmapImage bmp = new BitmapImage
+                        BitmapImage bmp = new()
                         {
                             UriSource = sourceUri
                         };
@@ -492,7 +498,10 @@ namespace XamlAnimatedGif
         {
             Uri uri = GetSourceUri(image);
             if (uri == null)
+            {
                 return null;
+            }
+
             if (!uri.IsAbsoluteUri)
             {
                 Uri baseUri = ((IUriContext)image).BaseUri;
@@ -511,11 +520,13 @@ namespace XamlAnimatedGif
         private static async void InitAnimationAsync(Image image, Uri sourceUri, RepeatBehavior repeatBehavior, int seqNum, bool cacheFrameDataInMemory)
         {
             if (!CheckDesignMode(image, sourceUri, null))
+            {
                 return;
+            }
 
             try
             {
-                Progress<int> progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
+                Progress<int> progress = new(percentage => OnDownloadProgress(image, percentage));
                 ImageAnimator animator = await ImageAnimator.CreateAsync(sourceUri, repeatBehavior, progress, image, cacheFrameDataInMemory);
                 // Check that the source hasn't changed while we were loading the animation
                 if (GetSeqNum(image) != seqNum)
@@ -542,7 +553,9 @@ namespace XamlAnimatedGif
         private static async void InitAnimationAsync(Image image, Stream stream, RepeatBehavior repeatBehavior, int seqNum, bool cacheFrameDataInMemory)
         {
             if (!CheckDesignMode(image, null, stream))
+            {
                 return;
+            }
 
             try
             {
@@ -581,16 +594,22 @@ namespace XamlAnimatedGif
         private static async Task StartAsync(Image image, Animator animator)
         {
             if (GetAutoStart(image))
+            {
                 animator.Play();
+            }
             else
+            {
                 await animator.ShowFirstFrameAsync();
+            }
         }
 
         private static void ClearAnimatorCore(Image image)
         {
             Animator animator = GetAnimator(image);
             if (animator == null)
+            {
                 return;
+            }
 
             animator.AnimationCompleted -= AnimatorAnimationCompleted;
             animator.AnimationStarted -= AnimatorAnimationStarted;
@@ -609,7 +628,7 @@ namespace XamlAnimatedGif
         {
             try
             {
-                Progress<int> progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
+                Progress<int> progress = new(percentage => OnDownloadProgress(image, percentage));
                 using Stream stream = await UriLoader.GetStreamFromUriAsync(sourceUri, progress);
                 SetStaticImageCore(image, stream);
             }
@@ -634,7 +653,7 @@ namespace XamlAnimatedGif
         private static void SetStaticImageCore(Image image, Stream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
-            BitmapImage bmp = new BitmapImage();
+            BitmapImage bmp = new();
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
             bmp.StreamSource = stream;

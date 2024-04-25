@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
-using Buffer = System.Buffer;
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using Buffer = System.Buffer;
 
 namespace XamlAnimatedGif.Decompression
 {
@@ -39,7 +39,9 @@ namespace XamlAnimatedGif.Decompression
             ValidateReadArgs(buffer, offset, count);
 
             if (_endOfStream)
+            {
                 return 0;
+            }
 
             int read = 0;
 
@@ -69,15 +71,12 @@ namespace XamlAnimatedGif.Decompression
 
         public override bool CanWrite => true;
 
-        public override long Length
-        {
-            get { throw new NotSupportedException(); }
-        }
+        public override long Length => throw new NotSupportedException();
 
         public override long Position
         {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
         }
 
         private void InitCodeTable()
@@ -105,19 +104,33 @@ namespace XamlAnimatedGif.Decompression
         {
             // If we read too many bytes last time, copy them first;
             if (_remainingBytes != null)
+            {
                 _remainingBytes = CopySequenceToBuffer(_remainingBytes, buffer, offset, count, ref read);
+            }
         }
 
         [Conditional("DISABLED")]
         private static void ValidateReadArgs(byte[] buffer, int offset, int count)
         {
-            if (buffer == null) throw new ArgumentNullException(nameof(buffer));
+            if (buffer == null)
+            {
+                throw new ArgumentNullException(nameof(buffer));
+            }
+
             if (offset < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(offset), "Offset can't be negative");
+            }
+
             if (count < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(count), "Count can't be negative");
+            }
+
             if (offset + count > buffer.Length)
+            {
                 throw new ArgumentException("Buffer is to small to receive the requested data");
+            }
         }
 
         private bool ProcessCode(int code, byte[] buffer, int offset, int count, ref int read)
@@ -217,20 +230,21 @@ namespace XamlAnimatedGif.Decompression
             {
                 // Code table is full, stop adding new codes
                 if (Count >= _table.Length)
+                {
                     return;
+                }
 
                 _table[Count++] = sequence;
                 if ((Count & (Count - 1)) == 0 && CodeLength < MaxCodeLength)
+                {
                     CodeLength++;
+                }
             }
 
             public Sequence this[int index]
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get
-                {
-                    return _table[index];
-                }
+                get => _table[index];
             }
 
             public int Count

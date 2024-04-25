@@ -47,7 +47,10 @@
             for (int i = 0; i < 4; i++)
             {
                 if (_bytePosition + i >= _buffer.Length)
+                {
                     break;
+                }
+
                 value |= _buffer[_bytePosition + i] << (i << 3);
             }
             return value;
