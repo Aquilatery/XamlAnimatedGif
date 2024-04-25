@@ -166,9 +166,9 @@ namespace XamlAnimatedGif
 
         public static void ClearDownloadCacheLocation()
         {
-            string cachePath = UriLoader.DownloadCacheLocation;
-            if (Directory.Exists(cachePath))
-                foreach (string cacheFile in Directory.GetFiles(cachePath))
+            string cacheLocation = UriLoader.DownloadCacheLocation;
+            if (Directory.Exists(cacheLocation))
+                foreach (string cacheFile in Directory.GetFiles(cacheLocation))
                 {
                     try
                     {
