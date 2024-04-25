@@ -13,7 +13,7 @@ namespace XamlAnimatedGif
 {
     internal class UriLoader
     {
-        public static TimeSpan DownloadCacheExpiration { get; set; } = TimeSpan.FromDays(1);
+        public static TimeSpan DownloadCacheExpiration { get; set; } = TimeSpan.FromDays(30);
         public static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
 
         public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int> progress)
