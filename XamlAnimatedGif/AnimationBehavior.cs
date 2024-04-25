@@ -187,16 +187,16 @@ namespace XamlAnimatedGif
 
         #endregion
 
-        #region CacheTime
+        #region DownloadCacheExpiration
 
-        public static TimeSpan GetCacheTime()
+        public static TimeSpan GetDownloadCacheExpiration()
         {
-            return UriLoader.CacheTime;
+            return UriLoader.DownloadCacheExpiration;
         }
 
-        public static void SetCacheTime(TimeSpan value)
+        public static void SetDownloadCacheExpiration(TimeSpan duration)
         {
-            UriLoader.CacheTime = value;
+            UriLoader.DownloadCacheExpiration = duration;
         }
 
         #endregion

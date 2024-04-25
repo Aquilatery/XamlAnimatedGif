@@ -68,7 +68,7 @@ For reference, I'll include the relevant sections of the previous README here (p
 |Automatic repeat count|:white_check_mark:|from the [Netscape Application Block](http://www.vurdalakov.net/misc/gif/netscape-looping-application-extension)|
 |Manual animation control|Partially|Only pause/resume are supported; support for next/previous/seek might be added later|
 |Customize cache path|:white_check_mark:|`AnimationBehavior.SetDownloadCacheLocation(@"C:\my\custom\path")` changes the temporary gif directory. `Path.GetTempPath()` is enabled by default.|
-|Customize cache time|:white_check_mark:|`AnimationBehavior.SetCacheTime(TimeSpan.FromSeconds(15))` sets the duration for which the temporary gif will be used. `TimeSpan.FromHours(12)` is active by default.|
+|Customize cache time|:white_check_mark:|`AnimationBehavior.SetDownloadCacheExpiration(TimeSpan.FromSeconds(15))` sets the duration for which the temporary gif will be used. `TimeSpan.FromDays(1)` is active by default.|
 
 ## How to build
 

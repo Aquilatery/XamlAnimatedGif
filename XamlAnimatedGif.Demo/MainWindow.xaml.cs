@@ -17,7 +17,7 @@ namespace XamlAnimatedGif.Demo
 
             //AnimationBehavior.SetDownloadCacheLocation(@"C:\GifCache"); //Path.GetTempPath()
 
-            //AnimationBehavior.SetCacheTime(TimeSpan.FromSeconds(30));
+            //AnimationBehavior.SetDownloadCacheExpiration(TimeSpan.FromSeconds(30));
 
             //AnimationBehavior.ClearDownloadCacheLocation();
 
