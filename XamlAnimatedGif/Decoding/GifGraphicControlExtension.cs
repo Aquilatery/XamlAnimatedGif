@@ -29,7 +29,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifGraphicControlExtension> ReadAsync(Stream stream)
         {
-            var ext = new GifGraphicControlExtension();
+            GifGraphicControlExtension ext = new GifGraphicControlExtension();
             await ext.ReadInternalAsync(stream).ConfigureAwait(false);
             return ext;
         }
@@ -44,7 +44,7 @@ namespace XamlAnimatedGif.Decoding
             if (BlockSize != 4)
                 throw GifHelpers.InvalidBlockSizeException("Graphic Control Extension", 4, BlockSize);
             byte packedFields = bytes[1];
-            DisposalMethod = (GifFrameDisposalMethod) ((packedFields & 0x1C) >> 2);
+            DisposalMethod = (GifFrameDisposalMethod)((packedFields & 0x1C) >> 2);
             UserInput = (packedFields & 0x02) != 0;
             HasTransparency = (packedFields & 0x01) != 0;
             Delay = BitConverter.ToUInt16(bytes, 2) * 10; // milliseconds

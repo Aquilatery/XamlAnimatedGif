@@ -19,7 +19,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifDataStream> ReadAsync(Stream stream)
         {
-            var file = new GifDataStream();
+            GifDataStream file = new GifDataStream();
             await file.ReadInternalAsync(stream).ConfigureAwait(false);
             return file;
         }
@@ -34,7 +34,7 @@ namespace XamlAnimatedGif.Decoding
             }
             await ReadFramesAsync(stream).ConfigureAwait(false);
 
-            var netscapeExtension =
+            GifApplicationExtension netscapeExtension =
                             Extensions
                                 .OfType<GifApplicationExtension>()
                                 .FirstOrDefault(GifHelpers.IsNetscapeExtension);
@@ -53,7 +53,7 @@ namespace XamlAnimatedGif.Decoding
             {
                 try
                 {
-                    var block = await GifBlock.ReadAsync(stream, controlExtensions).ConfigureAwait(false);
+                    GifBlock block = await GifBlock.ReadAsync(stream, controlExtensions).ConfigureAwait(false);
 
                     if (block.Kind == GifBlockKind.GraphicRendering)
                         controlExtensions = new List<GifExtension>();

@@ -37,7 +37,7 @@ namespace XamlAnimatedGif.Extensions
 
         public static async Task<int> ReadByteAsync(this Stream stream, CancellationToken cancellationToken = default)
         {
-            var buffer = new byte[1];
+            byte[] buffer = new byte[1];
 #if LACKS_STREAM_MEMORY_OVERLOADS
             int n = await stream.ReadAsync(buffer, 0, 1, cancellationToken);
 #else

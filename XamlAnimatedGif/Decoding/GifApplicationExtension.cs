@@ -26,7 +26,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifApplicationExtension> ReadAsync(Stream stream)
         {
-            var ext = new GifApplicationExtension();
+            GifApplicationExtension ext = new GifApplicationExtension();
             await ext.ReadInternalAsync(stream).ConfigureAwait(false);
             return ext;
         }

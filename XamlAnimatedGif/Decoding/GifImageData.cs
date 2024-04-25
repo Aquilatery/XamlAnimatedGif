@@ -14,7 +14,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifImageData> ReadAsync(Stream stream)
         {
-            var imgData = new GifImageData();
+            GifImageData imgData = new GifImageData();
             await imgData.ReadInternalAsync(stream).ConfigureAwait(false);
             return imgData;
         }

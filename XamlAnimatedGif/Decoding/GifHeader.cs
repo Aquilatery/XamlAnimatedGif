@@ -20,7 +20,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifHeader> ReadAsync(Stream stream)
         {
-            var header = new GifHeader();
+            GifHeader header = new GifHeader();
             await header.ReadInternalAsync(stream).ConfigureAwait(false);
             return header;
         }
@@ -31,7 +31,7 @@ namespace XamlAnimatedGif.Decoding
             if (Signature != "GIF")
                 throw GifHelpers.InvalidSignatureException(Signature);
             Version = await GifHelpers.ReadStringAsync(stream, 3).ConfigureAwait(false);
-            if (Version != "87a" && Version != "89a")
+            if (Version is not "87a" and not "89a")
                 throw GifHelpers.UnsupportedVersionException(Version);
             LogicalScreenDescriptor = await GifLogicalScreenDescriptor.ReadAsync(stream).ConfigureAwait(false);
         }

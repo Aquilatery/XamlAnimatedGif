@@ -13,7 +13,7 @@ namespace XamlAnimatedGif
 
         public static async Task<T> WithCancellationToken<T>(this Task<T> task, CancellationToken cancellationToken)
         {
-            var firstTaskToFinish = await Task.WhenAny(task, cancellationToken.WhenCanceled());
+            Task firstTaskToFinish = await Task.WhenAny(task, cancellationToken.WhenCanceled());
             if (firstTaskToFinish == task)
                 return await task;
 
@@ -25,8 +25,8 @@ namespace XamlAnimatedGif
 
         public static Task WhenCanceled(this CancellationToken cancellationToken)
         {
-            var tcs = new TaskCompletionSource<int>();
-            var registration = default(CancellationTokenRegistration);
+            TaskCompletionSource<int> tcs = new TaskCompletionSource<int>();
+            CancellationTokenRegistration registration = default(CancellationTokenRegistration);
             registration = cancellationToken.Register(o =>
             {
                 ((TaskCompletionSource<int>)o).TrySetCanceled();

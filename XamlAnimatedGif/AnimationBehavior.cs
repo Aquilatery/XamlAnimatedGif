@@ -102,11 +102,11 @@ namespace XamlAnimatedGif
             return (bool)element.GetValue(CacheFramesInMemoryProperty);
         }
 
-        public static readonly DependencyProperty CacheFramesInMemoryProperty = 
+        public static readonly DependencyProperty CacheFramesInMemoryProperty =
             DependencyProperty.RegisterAttached(
-            "CacheFramesInMemory", 
-            typeof(bool), 
-            typeof(AnimationBehavior), 
+            "CacheFramesInMemory",
+            typeof(bool),
+            typeof(AnimationBehavior),
             new PropertyMetadata(false, SourceChanged));
 
         #endregion
@@ -204,7 +204,7 @@ namespace XamlAnimatedGif
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public static Animator GetAnimator(DependencyObject obj)
         {
-            return (Animator) obj.GetValue(AnimatorProperty);
+            return (Animator)obj.GetValue(AnimatorProperty);
         }
 
         private static void SetAnimator(DependencyObject obj, Animator value)
@@ -215,8 +215,8 @@ namespace XamlAnimatedGif
         public static readonly DependencyProperty AnimatorProperty =
             DependencyProperty.RegisterAttached(
                 "Animator",
-                typeof (Animator),
-                typeof (AnimationBehavior),
+                typeof(Animator),
+                typeof(AnimationBehavior),
                 new PropertyMetadata(null));
 
         #endregion
@@ -227,8 +227,8 @@ namespace XamlAnimatedGif
             EventManager.RegisterRoutedEvent(
                 "Error",
                 RoutingStrategy.Bubble,
-                typeof (AnimationErrorEventHandler),
-                typeof (AnimationBehavior));
+                typeof(AnimationErrorEventHandler),
+                typeof(AnimationBehavior));
 
         public static void AddErrorHandler(DependencyObject d, AnimationErrorEventHandler handler)
         {
@@ -247,7 +247,7 @@ namespace XamlAnimatedGif
 
         private static void AnimatorError(object sender, AnimationErrorEventArgs e)
         {
-            var source = e.Source as UIElement;
+            UIElement source = e.Source as UIElement;
             source?.RaiseEvent(e);
         }
 
@@ -259,8 +259,8 @@ namespace XamlAnimatedGif
             EventManager.RegisterRoutedEvent(
                 "DownloadProgress",
                 RoutingStrategy.Bubble,
-                typeof (DownloadProgressEventHandler),
-                typeof (AnimationBehavior));
+                typeof(DownloadProgressEventHandler),
+                typeof(AnimationBehavior));
 
         public static void AddDownloadProgressHandler(DependencyObject d, DownloadProgressEventHandler handler)
         {
@@ -284,8 +284,8 @@ namespace XamlAnimatedGif
             EventManager.RegisterRoutedEvent(
                 "Loaded",
                 RoutingStrategy.Bubble,
-                typeof (RoutedEventHandler),
-                typeof (AnimationBehavior));
+                typeof(RoutedEventHandler),
+                typeof(AnimationBehavior));
 
         public static void AddLoadedHandler(DependencyObject d, RoutedEventHandler handler)
         {
@@ -408,7 +408,7 @@ namespace XamlAnimatedGif
                     }
                     else if (sourceUri != null)
                     {
-                        var bmp = new BitmapImage
+                        BitmapImage bmp = new BitmapImage
                         {
                             UriSource = sourceUri
                         };
@@ -444,14 +444,14 @@ namespace XamlAnimatedGif
 
             try
             {
-                var stream = GetSourceStream(image);
+                Stream stream = GetSourceStream(image);
                 if (stream != null)
                 {
                     InitAnimationAsync(image, stream.AsBuffered(), GetRepeatBehavior(image), seqNum, GetCacheFramesInMemory(image));
                     return;
                 }
 
-                var uri = GetAbsoluteUri(image);
+                Uri uri = GetAbsoluteUri(image);
                 if (uri != null)
                 {
                     InitAnimationAsync(image, uri, GetRepeatBehavior(image), seqNum, GetCacheFramesInMemory(image));
@@ -465,14 +465,14 @@ namespace XamlAnimatedGif
 
         private static void Image_Loaded(object sender, RoutedEventArgs e)
         {
-            var image = (Image) sender;
+            Image image = (Image)sender;
             image.Loaded -= Image_Loaded;
             InitAnimation(image);
         }
 
         private static void Image_Unloaded(object sender, RoutedEventArgs e)
         {
-            var image = (Image) sender;
+            Image image = (Image)sender;
             image.Unloaded -= Image_Unloaded;
             image.Loaded += Image_Loaded;
 
@@ -490,12 +490,12 @@ namespace XamlAnimatedGif
 
         private static Uri GetAbsoluteUri(Image image)
         {
-            var uri = GetSourceUri(image);
+            Uri uri = GetSourceUri(image);
             if (uri == null)
                 return null;
             if (!uri.IsAbsoluteUri)
             {
-                var baseUri = ((IUriContext)image).BaseUri;
+                Uri baseUri = ((IUriContext)image).BaseUri;
                 if (baseUri != null)
                 {
                     uri = new Uri(baseUri, uri);
@@ -515,8 +515,8 @@ namespace XamlAnimatedGif
 
             try
             {
-                var progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
-                var animator = await ImageAnimator.CreateAsync(sourceUri, repeatBehavior, progress, image, cacheFrameDataInMemory);
+                Progress<int> progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
+                ImageAnimator animator = await ImageAnimator.CreateAsync(sourceUri, repeatBehavior, progress, image, cacheFrameDataInMemory);
                 // Check that the source hasn't changed while we were loading the animation
                 if (GetSeqNum(image) != seqNum)
                 {
@@ -533,7 +533,7 @@ namespace XamlAnimatedGif
                 await SetStaticImageAsync(image, sourceUri);
                 OnLoaded(image);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 OnError(image, ex, AnimationErrorKind.Loading);
             }
@@ -546,7 +546,7 @@ namespace XamlAnimatedGif
 
             try
             {
-                var animator = await ImageAnimator.CreateAsync(stream, repeatBehavior, image, cacheFrameDataInMemory);
+                ImageAnimator animator = await ImageAnimator.CreateAsync(stream, repeatBehavior, image, cacheFrameDataInMemory);
                 // Check that the source hasn't changed while we were loading the animation
                 if (GetSeqNum(image) != seqNum)
                 {
@@ -563,7 +563,7 @@ namespace XamlAnimatedGif
                 SetStaticImage(image, stream);
                 OnLoaded(image);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 OnError(image, ex, AnimationErrorKind.Loading);
             }
@@ -588,7 +588,7 @@ namespace XamlAnimatedGif
 
         private static void ClearAnimatorCore(Image image)
         {
-            var animator = GetAnimator(image);
+            Animator animator = GetAnimator(image);
             if (animator == null)
                 return;
 
@@ -609,8 +609,8 @@ namespace XamlAnimatedGif
         {
             try
             {
-                var progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
-                using var stream = await UriLoader.GetStreamFromUriAsync(sourceUri, progress);
+                Progress<int> progress = new Progress<int>(percentage => OnDownloadProgress(image, percentage));
+                using Stream stream = await UriLoader.GetStreamFromUriAsync(sourceUri, progress);
                 SetStaticImageCore(image, stream);
             }
             catch (Exception ex)
@@ -634,7 +634,7 @@ namespace XamlAnimatedGif
         private static void SetStaticImageCore(Image image, Stream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
-            var bmp = new BitmapImage();
+            BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
             bmp.CacheOption = BitmapCacheOption.OnLoad;
             bmp.StreamSource = stream;

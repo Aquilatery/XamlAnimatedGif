@@ -33,9 +33,9 @@ namespace XamlAnimatedGif
 
             await IsPausedAsync(cancellationToken);
 
-            var repeatBehavior = RepeatBehavior;
+            RepeatBehavior repeatBehavior = RepeatBehavior;
 
-            var ts = _timeSpans[_current];
+            TimeSpan ts = _timeSpans[_current];
             await Task.Delay(ts, cancellationToken);
             _current++;
             _elapsed += ts;
@@ -109,7 +109,7 @@ namespace XamlAnimatedGif
         public void Resume()
         {
             if (!IsPaused) return; // Make this a no-op.
-            var tcs = _pauseCompletionSource;
+            TaskCompletionSource<int> tcs = _pauseCompletionSource;
             tcs?.TrySetResult(0);
             _pauseCompletionSource = null;
             IsPaused = false;
@@ -119,7 +119,7 @@ namespace XamlAnimatedGif
 
         private Task IsPausedAsync(CancellationToken cancellationToken)
         {
-            var tcs = _pauseCompletionSource;
+            TaskCompletionSource<int> tcs = _pauseCompletionSource;
             if (tcs != null)
             {
                 return tcs.Task.WithCancellationToken(cancellationToken);

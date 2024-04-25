@@ -26,7 +26,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal new static async Task<GifFrame> ReadAsync(Stream stream, IEnumerable<GifExtension> controlExtensions)
         {
-            var frame = new GifFrame();
+            GifFrame frame = new GifFrame();
 
             await frame.ReadInternalAsync(stream, controlExtensions).ConfigureAwait(false);
 

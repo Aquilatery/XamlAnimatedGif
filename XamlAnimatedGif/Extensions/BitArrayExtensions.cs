@@ -9,7 +9,7 @@ namespace XamlAnimatedGif.Extensions
             short n = 0;
             for (int i = bitArray.Length - 1; i >= 0; i--)
             {
-                n = (short) ((n << 1) + (bitArray[i] ? 1 : 0));
+                n = (short)((n << 1) + (bitArray[i] ? 1 : 0));
             }
             return n;
         }

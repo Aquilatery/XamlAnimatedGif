@@ -48,7 +48,7 @@ namespace XamlAnimatedGif.Decompression
             while (read < count)
             {
                 int code = _reader.ReadBits(_codeTable.CodeLength);
-                
+
                 if (!ProcessCode(code, buffer, offset, count, ref read))
                 {
                     _endOfStream = true;
@@ -124,7 +124,7 @@ namespace XamlAnimatedGif.Decompression
         {
             if (code < _codeTable.Count)
             {
-                var sequence = _codeTable[code];
+                Sequence sequence = _codeTable[code];
                 if (sequence.IsStopCode)
                 {
                     return false;
@@ -137,15 +137,15 @@ namespace XamlAnimatedGif.Decompression
                 _remainingBytes = CopySequenceToBuffer(sequence.Bytes, buffer, offset, count, ref read);
                 if (_prevCode >= 0)
                 {
-                    var prev = _codeTable[_prevCode];
-                    var newSequence = prev.Append(sequence.Bytes[0]);
+                    Sequence prev = _codeTable[_prevCode];
+                    Sequence newSequence = prev.Append(sequence.Bytes[0]);
                     _codeTable.Add(newSequence);
                 }
             }
             else
             {
-                var prev = _codeTable[_prevCode];
-                var newSequence = prev.Append(prev.Bytes[0]);
+                Sequence prev = _codeTable[_prevCode];
+                Sequence newSequence = prev.Append(prev.Bytes[0]);
                 _codeTable.Add(newSequence);
                 _remainingBytes = CopySequenceToBuffer(newSequence.Bytes, buffer, offset, count, ref read);
             }
@@ -180,7 +180,7 @@ namespace XamlAnimatedGif.Decompression
 
             public Sequence Append(byte b)
             {
-                var bytes = new byte[Bytes.Length + 1];
+                byte[] bytes = new byte[Bytes.Length + 1];
                 Bytes.CopyTo(bytes, 0);
                 bytes[Bytes.Length] = b;
                 return new Sequence(bytes);
@@ -191,18 +191,16 @@ namespace XamlAnimatedGif.Decompression
         {
             private readonly int _minimumCodeLength;
             private readonly Sequence[] _table;
-            private int _count;
-            private int _codeLength;
 
             public CodeTable(int minimumCodeLength)
             {
                 _minimumCodeLength = minimumCodeLength;
-                _codeLength = _minimumCodeLength + 1;
+                CodeLength = _minimumCodeLength + 1;
                 int initialEntries = 1 << minimumCodeLength;
                 _table = new Sequence[1 << MaxCodeLength];
                 for (int i = 0; i < initialEntries; i++)
                 {
-                    _table[_count++] = new Sequence(new[] {(byte) i});
+                    _table[Count++] = new Sequence(new[] { (byte)i });
                 }
                 Add(Sequence.ClearCode);
                 Add(Sequence.StopCode);
@@ -210,20 +208,20 @@ namespace XamlAnimatedGif.Decompression
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Reset()
             {
-                _count = (1 << _minimumCodeLength) + 2;
-                _codeLength = _minimumCodeLength + 1;
+                Count = (1 << _minimumCodeLength) + 2;
+                CodeLength = _minimumCodeLength + 1;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public void Add(Sequence sequence)
             {
                 // Code table is full, stop adding new codes
-                if (_count >= _table.Length)
+                if (Count >= _table.Length)
                     return;
 
-                _table[_count++] = sequence;
-                if ((_count & (_count - 1)) == 0 && _codeLength < MaxCodeLength)
-                    _codeLength++;
+                _table[Count++] = sequence;
+                if ((Count & (Count - 1)) == 0 && CodeLength < MaxCodeLength)
+                    CodeLength++;
             }
 
             public Sequence this[int index]
@@ -238,13 +236,13 @@ namespace XamlAnimatedGif.Decompression
             public int Count
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get { return _count; }
+                get; private set;
             }
 
             public int CodeLength
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get { return _codeLength; }
+                get; private set;
             }
         }
     }

@@ -23,7 +23,7 @@ namespace XamlAnimatedGif.Decoding
 
         public static async Task<byte[]> ReadDataBlocksAsync(Stream stream, CancellationToken cancellationToken = default)
         {
-            using var ms = new MemoryStream();
+            using MemoryStream ms = new MemoryStream();
             await CopyDataBlocksToStreamAsync(stream, ms, cancellationToken);
             return ms.ToArray();
         }
@@ -53,8 +53,8 @@ namespace XamlAnimatedGif.Decoding
             for (int i = 0; i < size; i++)
             {
                 byte r = bytes[3 * i];
-                byte g = bytes[3 * i + 1];
-                byte b = bytes[3 * i + 2];
+                byte g = bytes[(3 * i) + 1];
+                byte b = bytes[(3 * i) + 2];
                 colorTable[i] = new GifColor(r, g, b);
             }
             return colorTable;

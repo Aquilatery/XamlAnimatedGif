@@ -26,7 +26,7 @@ namespace XamlAnimatedGif
         private static async Task<Stream> GetNetworkStreamAsync(Uri uri, IProgress<int> progress)
         {
             string cacheFileName = GetCacheFileName(uri);
-            var cacheStream = await OpenTempFileStreamAsync(cacheFileName);
+            Stream cacheStream = await OpenTempFileStreamAsync(cacheFileName);
             if (cacheStream == null)
             {
                 await DownloadToCacheFileAsync(uri, cacheFileName, progress);
@@ -39,13 +39,13 @@ namespace XamlAnimatedGif
         {
             try
             {
-                using var client = new HttpClient();
-                var request = new HttpRequestMessage(HttpMethod.Get, uri);
-                var response = await client.SendAsync(request);
+                using HttpClient client = new HttpClient();
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+                HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 long length = response.Content.Headers.ContentLength ?? 0;
-                using var responseStream = await response.Content.ReadAsStreamAsync();
-                using var fileStream = await CreateTempFileStreamAsync(fileName);
+                using Stream responseStream = await response.Content.ReadAsStreamAsync();
+                using Stream fileStream = await CreateTempFileStreamAsync(fileName);
                 IProgress<long> absoluteProgress = null;
                 if (progress != null)
                 {
@@ -71,7 +71,7 @@ namespace XamlAnimatedGif
         {
             if (uri.Scheme == PackUriHelper.UriSchemePack)
             {
-                var sri = uri.Authority == "siteoforigin:,,,"
+                System.Windows.Resources.StreamResourceInfo sri = uri.Authority == "siteoforigin:,,,"
                     ? Application.GetRemoteStream(uri)
                     : Application.GetResourceStream(uri);
 
@@ -129,9 +129,9 @@ namespace XamlAnimatedGif
 
         private static string GetCacheFileName(Uri uri)
         {
-            using var sha1 = SHA1.Create();
-            var bytes = Encoding.UTF8.GetBytes(uri.AbsoluteUri);
-            var hash = sha1.ComputeHash(bytes);
+            using SHA1 sha1 = SHA1.Create();
+            byte[] bytes = Encoding.UTF8.GetBytes(uri.AbsoluteUri);
+            byte[] hash = sha1.ComputeHash(bytes);
             return ToHex(hash);
         }
 

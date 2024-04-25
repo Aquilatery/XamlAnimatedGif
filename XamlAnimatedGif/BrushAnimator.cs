@@ -11,7 +11,7 @@ namespace XamlAnimatedGif
     {
         private BrushAnimator(Stream sourceStream, Uri sourceUri, GifDataStream metadata, RepeatBehavior repeatBehavior, bool cacheFrameDataInMemory) : base(sourceStream, sourceUri, metadata, repeatBehavior, cacheFrameDataInMemory)
         {
-            Brush = new ImageBrush {ImageSource = Bitmap};
+            Brush = new ImageBrush { ImageSource = Bitmap };
             RepeatBehavior = _repeatBehavior;
         }
 

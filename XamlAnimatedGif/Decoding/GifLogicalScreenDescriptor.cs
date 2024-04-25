@@ -18,7 +18,7 @@ namespace XamlAnimatedGif.Decoding
 
         internal static async Task<GifLogicalScreenDescriptor> ReadAsync(Stream stream)
         {
-            var descriptor = new GifLogicalScreenDescriptor();
+            GifLogicalScreenDescriptor descriptor = new GifLogicalScreenDescriptor();
             await descriptor.ReadInternalAsync(stream).ConfigureAwait(false);
             return descriptor;
         }
