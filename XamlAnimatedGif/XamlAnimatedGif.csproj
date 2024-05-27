@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows</TargetFrameworks>
+		<TargetFrameworks>net48;net481;net6.0-windows;net7.0-windows;net8.0-windows;net9.0-windows</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>XamlAnimatedGif.snk</AssemblyOriginatorKeyFile>
@@ -20,11 +20,11 @@
 		<PackageIcon>assets/xamlanimatedgif.png</PackageIcon>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net48'">
+	<PropertyGroup Condition="'$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'net481'">
 		<DefineConstants>$(DefineConstants);LACKS_STREAM_MEMORY_OVERLOADS</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'net481'">
 		<Reference Include="System.Net.Http" />
 	</ItemGroup>
 

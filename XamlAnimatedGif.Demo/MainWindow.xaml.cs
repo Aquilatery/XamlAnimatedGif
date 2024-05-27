@@ -19,28 +19,30 @@ namespace XamlAnimatedGif.Demo
 
             //AnimationBehavior.SetDownloadCacheExpiration(TimeSpan.FromSeconds(30));
 
+            //AnimationBehavior.SetClientUserAgent("XamlAnimatedGif/1.0");
+
             //AnimationBehavior.ClearDownloadCacheLocation();
 
             _images = new ObservableCollection<string>
-                      {
-                          "images/working.gif",
-                          "images/earth.gif",
-                          "images/radar.gif",
-                          "images/bomb.gif",
-                          "images/bomb-once.gif",
-                          "images/nonanimated.gif",
-                          "images/monster.gif",
-                          "pack://siteoforigin:,,,/images/siteoforigin.gif",
-                          "images/partialfirstframe.gif",
-                          "images/newton-cradle.gif",
-                          "images/not-a-gif.png",
-                          "images/optimized-full-code-table.gif",
-                          "images/corrupt-frame-size.gif",
-                          "images/interlaced.gif",
-                          "http://i.imgur.com/rCK6xzh.gif",
-                          "http://media.giphy.com/media/zW2pe7UscHiq4/giphy.gif",
-                          "http://media.giphy.com/media/nWn6ko2ygIeEU/giphy.gif"
-                      };
+            {
+                "images/working.gif",
+                "images/earth.gif",
+                "images/radar.gif",
+                "images/bomb.gif",
+                "images/bomb-once.gif",
+                "images/nonanimated.gif",
+                "images/monster.gif",
+                "pack://siteoforigin:,,,/images/siteoforigin.gif",
+                "images/partialfirstframe.gif",
+                "images/newton-cradle.gif",
+                "images/not-a-gif.png",
+                "images/optimized-full-code-table.gif",
+                "images/corrupt-frame-size.gif",
+                "images/interlaced.gif",
+                "http://i.imgur.com/rCK6xzh.gif",
+                "http://media.giphy.com/media/zW2pe7UscHiq4/giphy.gif",
+                "http://media.giphy.com/media/nWn6ko2ygIeEU/giphy.gif"
+            };
             DataContext = this;
         }
 

@@ -157,6 +157,20 @@ namespace XamlAnimatedGif
 
         #endregion
 
+        #region ClientUserAgent
+
+        public static string GetClientUserAgent()
+        {
+            return UriLoader.ClientUserAgent;
+        }
+
+        public static void SetClientUserAgent(string userAgent)
+        {
+            UriLoader.ClientUserAgent = userAgent;
+        }
+
+        #endregion
+
         #region DownloadCacheLocation
 
         public static string GetDownloadCacheLocation()

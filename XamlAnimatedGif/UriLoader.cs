@@ -15,6 +15,7 @@ namespace XamlAnimatedGif
     {
         public static TimeSpan DownloadCacheExpiration { get; set; } = TimeSpan.FromDays(30);
         public static string DownloadCacheLocation { get; set; } = Path.GetTempPath();
+        public static string ClientUserAgent { get; set; } = "XamlAnimatedGif";
 
         public static Task<Stream> GetStreamFromUriAsync(Uri uri, IProgress<int> progress)
         {
@@ -43,6 +44,7 @@ namespace XamlAnimatedGif
             try
             {
                 using HttpClient client = new();
+                client.DefaultRequestHeaders.Add("User-Agent", ClientUserAgent);
                 HttpRequestMessage request = new(HttpMethod.Get, uri);
                 HttpResponseMessage response = await client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
